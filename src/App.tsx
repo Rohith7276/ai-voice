@@ -114,12 +114,10 @@ export function App() {
     setManualTranscript,
   } = useSpeechRecognition({
     onStartRecording: () => {
-      // Clear previous response text and current prompt so each record session is one clean prompt
       setPrompterText('Listening... (Press stop to immediately hear from Rohith HP)');
       setCurrentPrompt('');
     },
     onAutoSubmit: (transcribedText) => {
-      // Immediately send the transcribed voice to AI once record stop is pressed
       if (transcribedText.trim()) {
         handleQueryAi(transcribedText.trim());
       }
@@ -136,24 +134,24 @@ export function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-5 lg:p-8 space-y-4 sm:space-y-6">
         {/* Single-Line Continuous Right-to-Left Marquee Display */}
-        <section className="space-y-3">
+        <section className="space-y-2 sm:space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2 px-1">
-            <div className="flex items-center gap-2">
-              <Tv className="w-4 h-4 text-amber-400" />
-              <h2 className="text-sm font-semibold tracking-wide uppercase text-slate-300 m-0">
+            <div className="flex items-center gap-2 min-w-0">
+              <Tv className="w-4 h-4 text-amber-400 shrink-0" />
+              <h2 className="text-xs sm:text-sm font-semibold tracking-wide uppercase text-slate-300 m-0 truncate">
                 Single-Line Continuous Marquee Feed
               </h2>
               {currentPrompt && (
-                <span className="text-xs text-slate-400 truncate max-w-md hidden md:inline">
-                  — Question for Rohith: <span className="text-slate-200 font-medium">"{currentPrompt}"</span>
+                <span className="text-xs text-slate-400 truncate max-w-[200px] sm:max-w-md hidden sm:inline">
+                  — Question: <span className="text-slate-200 font-medium">"{currentPrompt}"</span>
                 </span>
               )}
             </div>
 
             <div className="flex items-center gap-2 text-xs text-slate-400">
-              <span className="hidden sm:flex items-center gap-1 bg-white/5 border border-white/10 px-2 py-0.5 rounded-md font-mono text-[11px]">
+              <span className="hidden md:flex items-center gap-1 bg-white/5 border border-white/10 px-2 py-0.5 rounded-md font-mono text-[11px]">
                 <Command className="w-3 h-3" /> Space to Pause • Up/Down for Speed • F for Fullscreen
               </span>
             </div>
@@ -170,7 +168,7 @@ export function App() {
         </section>
 
         {/* Lower Grid: Voice Input & Live Styling Controls */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
           {/* Voice Input Section (40% width on large screens) */}
           <div className="lg:col-span-5 flex flex-col gap-4">
             <VoiceController
@@ -189,16 +187,16 @@ export function App() {
             />
 
             {/* Candidate & Resume Profile Card */}
-            <div className="p-4 rounded-2xl bg-slate-900/40 border border-white/5 text-xs text-slate-400 space-y-2">
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-900/40 border border-white/5 text-xs text-slate-400 space-y-2">
               <div className="flex items-center gap-1.5 font-semibold text-slate-300">
                 <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Candidate Representation Active</span>
               </div>
               <ul className="list-disc list-inside space-y-1 text-[11px] leading-relaxed text-slate-400">
                 <li><strong className="text-slate-300">Profile:</strong> Rohith HP • Software Developer & AI/Full-Stack Engineer.</li>
-                <li><strong className="text-slate-300">Verified Experience:</strong> Zyvora Innovations, Specular Graphics, Rapid Chat RAG platform.</li>
-                <li><strong className="text-slate-300">First-Person Representation:</strong> The AI answers directly as Rohith in crisp, factual single-line sentences.</li>
-                <li><strong className="text-slate-300">Instant Flow:</strong> Stop recording to immediately generate and scroll the answer from right to left.</li>
+                <li><strong className="text-slate-300">Experience:</strong> Zyvora Innovations, Specular Graphics, Rapid Chat RAG platform.</li>
+                <li><strong className="text-slate-300">Detailed Representation:</strong> Comprehensive first-person answers covering technical depth, metrics, and architecture.</li>
+                <li><strong className="text-slate-300">Instant Flow:</strong> Stop recording to immediately stream the answer from right to left.</li>
               </ul>
             </div>
           </div>
@@ -211,8 +209,8 @@ export function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 py-4 px-6 text-center text-xs text-slate-500">
-        VoicePrompt AI • Candidate Interview Mode (Rohith HP) • Powered by Groq LPU
+      <footer className="border-t border-white/10 py-3 sm:py-4 px-4 text-center text-[11px] sm:text-xs text-slate-500">
+        VoicePrompt AI • Candidate Interview Mode (Rohith HP) • Responsive Marquee • Powered by Groq
       </footer>
 
       {/* Modals & Drawers */}

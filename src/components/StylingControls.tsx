@@ -20,22 +20,22 @@ interface StylingControlsProps {
 
 export const StylingControls: React.FC<StylingControlsProps> = ({ settings, onChange }) => {
   return (
-    <div className="w-full bg-slate-900/70 border border-white/10 rounded-2xl p-5 shadow-xl backdrop-blur-md space-y-6">
+    <div className="w-full bg-slate-900/70 border border-white/10 rounded-2xl p-4 sm:p-5 shadow-xl backdrop-blur-md space-y-5 sm:space-y-6">
       <div className="flex items-center justify-between pb-3 border-b border-white/10">
         <div className="flex items-center gap-2">
           <Sliders className="w-4 h-4 text-amber-400" />
-          <h3 className="text-sm font-semibold text-slate-100">
+          <h3 className="text-xs sm:text-sm font-semibold text-slate-100">
             Single-Line Marquee & Typography Controls
           </h3>
         </div>
-        <span className="text-xs font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+        <span className="text-[10px] sm:text-xs font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
           Right-to-Left Ticker
         </span>
       </div>
 
       {/* 1-Click Preset Themes */}
       <div>
-        <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 mb-2.5">
+        <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 mb-2 sm:mb-2.5">
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
           <span>Marquee Presets</span>
         </label>
@@ -59,24 +59,24 @@ export const StylingControls: React.FC<StylingControlsProps> = ({ settings, onCh
                     fontFamily: theme.font,
                   }))
                 }
-                className={`p-2.5 rounded-xl border text-left transition relative overflow-hidden ${
+                className={`p-2 sm:p-2.5 rounded-xl border text-left transition relative overflow-hidden ${
                   isSelected
                     ? 'border-amber-500 bg-amber-500/10 ring-2 ring-amber-500/30'
                     : 'border-white/10 hover:border-white/20 bg-white/5'
                 }`}
               >
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
                   <div
-                    className="w-3.5 h-3.5 rounded-full border border-white/20"
+                    className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full border border-white/20"
                     style={{ backgroundColor: theme.bg }}
                   />
                   <div
-                    className="w-3.5 h-3.5 rounded-full border border-white/20"
+                    className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full border border-white/20"
                     style={{ backgroundColor: theme.text }}
                   />
                 </div>
-                <div className="text-xs font-medium text-slate-200 truncate">{theme.name}</div>
-                <div className="text-[10px] text-slate-400 truncate">{theme.description}</div>
+                <div className="text-[11px] sm:text-xs font-medium text-slate-200 truncate">{theme.name}</div>
+                <div className="text-[9px] sm:text-[10px] text-slate-400 truncate">{theme.description}</div>
               </button>
             );
           })}
@@ -84,9 +84,9 @@ export const StylingControls: React.FC<StylingControlsProps> = ({ settings, onCh
       </div>
 
       {/* Sliders Grid: Line Height, Text Size, Animation Speed */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-5">
         {/* Line Height Control */}
-        <div className="space-y-2 bg-slate-950/40 p-4 rounded-xl border border-white/5">
+        <div className="space-y-2 bg-slate-950/40 p-3 sm:p-4 rounded-xl border border-white/5">
           <div className="flex justify-between items-center text-xs">
             <span className="font-semibold text-slate-300 flex items-center gap-1.5">
               <MoveVertical className="w-3.5 h-3.5 text-indigo-400" />
@@ -116,7 +116,7 @@ export const StylingControls: React.FC<StylingControlsProps> = ({ settings, onCh
         </div>
 
         {/* Text Size Control */}
-        <div className="space-y-2 bg-slate-950/40 p-4 rounded-xl border border-white/5">
+        <div className="space-y-2 bg-slate-950/40 p-3 sm:p-4 rounded-xl border border-white/5">
           <div className="flex justify-between items-center text-xs">
             <span className="font-semibold text-slate-300 flex items-center gap-1.5">
               <Type className="w-3.5 h-3.5 text-cyan-400" />
@@ -144,7 +144,7 @@ export const StylingControls: React.FC<StylingControlsProps> = ({ settings, onCh
         </div>
 
         {/* Animation Speed Control */}
-        <div className="space-y-2 bg-slate-950/40 p-4 rounded-xl border border-white/5">
+        <div className="space-y-2 bg-slate-950/40 p-3 sm:p-4 rounded-xl border border-white/5">
           <div className="flex justify-between items-center text-xs">
             <span className="font-semibold text-slate-300 flex items-center gap-1.5">
               <Gauge className="w-3.5 h-3.5 text-emerald-400" />
@@ -175,9 +175,9 @@ export const StylingControls: React.FC<StylingControlsProps> = ({ settings, onCh
       </div>
 
       {/* Colors Grid: Background Color & Text Color */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-5">
         {/* Background Color */}
-        <div className="space-y-3 bg-slate-950/40 p-4 rounded-xl border border-white/5">
+        <div className="space-y-2.5 sm:space-y-3 bg-slate-950/40 p-3 sm:p-4 rounded-xl border border-white/5">
           <div className="flex justify-between items-center text-xs">
             <span className="font-semibold text-slate-300 flex items-center gap-1.5">
               <Palette className="w-3.5 h-3.5 text-purple-400" />
@@ -191,7 +191,7 @@ export const StylingControls: React.FC<StylingControlsProps> = ({ settings, onCh
                   const val = e.target.value;
                   onChange((prev) => ({ ...prev, backgroundColor: val }));
                 }}
-                className="w-6 h-6 rounded cursor-pointer border border-white/20 bg-transparent"
+                className="w-5 h-5 sm:w-6 sm:h-6 rounded cursor-pointer border border-white/20 bg-transparent"
               />
               <span className="font-mono text-slate-400 text-xs uppercase">
                 {settings.backgroundColor}
@@ -199,13 +199,13 @@ export const StylingControls: React.FC<StylingControlsProps> = ({ settings, onCh
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1 sm:gap-1.5">
             {COLOR_PALETTES.backgrounds.map((c) => (
               <button
                 key={c.value}
                 onClick={() => onChange((prev) => ({ ...prev, backgroundColor: c.value }))}
                 title={c.label}
-                className={`w-7 h-7 rounded-lg border transition-all ${
+                className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg border transition-all ${
                   settings.backgroundColor.toLowerCase() === c.value.toLowerCase()
                     ? 'border-amber-400 ring-2 ring-amber-400/50 scale-110'
                     : 'border-white/20 hover:scale-105'
@@ -217,7 +217,7 @@ export const StylingControls: React.FC<StylingControlsProps> = ({ settings, onCh
         </div>
 
         {/* Text Color */}
-        <div className="space-y-3 bg-slate-950/40 p-4 rounded-xl border border-white/5">
+        <div className="space-y-2.5 sm:space-y-3 bg-slate-950/40 p-3 sm:p-4 rounded-xl border border-white/5">
           <div className="flex justify-between items-center text-xs">
             <span className="font-semibold text-slate-300 flex items-center gap-1.5">
               <Palette className="w-3.5 h-3.5 text-rose-400" />
@@ -231,7 +231,7 @@ export const StylingControls: React.FC<StylingControlsProps> = ({ settings, onCh
                   const val = e.target.value;
                   onChange((prev) => ({ ...prev, textColor: val }));
                 }}
-                className="w-6 h-6 rounded cursor-pointer border border-white/20 bg-transparent"
+                className="w-5 h-5 sm:w-6 sm:h-6 rounded cursor-pointer border border-white/20 bg-transparent"
               />
               <span className="font-mono text-slate-400 text-xs uppercase">
                 {settings.textColor}
@@ -239,13 +239,13 @@ export const StylingControls: React.FC<StylingControlsProps> = ({ settings, onCh
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1 sm:gap-1.5">
             {COLOR_PALETTES.texts.map((c) => (
               <button
                 key={c.value}
                 onClick={() => onChange((prev) => ({ ...prev, textColor: c.value }))}
                 title={c.label}
-                className={`w-7 h-7 rounded-lg border transition-all ${
+                className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg border transition-all ${
                   settings.textColor.toLowerCase() === c.value.toLowerCase()
                     ? 'border-amber-400 ring-2 ring-amber-400/50 scale-110'
                     : 'border-white/20 hover:scale-105'
@@ -258,7 +258,7 @@ export const StylingControls: React.FC<StylingControlsProps> = ({ settings, onCh
       </div>
 
       {/* Advanced Typography & Animation Details */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-1 sm:pt-2">
         {/* Font Family */}
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-slate-400">Font Family</label>

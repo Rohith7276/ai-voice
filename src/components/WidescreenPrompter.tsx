@@ -145,13 +145,11 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
       const segWidth = segment1Ref.current ? segment1Ref.current.offsetWidth : 0;
 
       if (settings.scrollDirection === 'left-to-right') {
-        // Reverse direction: Left to Right
         scrollPosRef.current -= pixelsPerSec * deltaTime;
         if (segWidth > 0 && scrollPosRef.current <= 0) {
           scrollPosRef.current = segWidth;
         }
       } else {
-        // Default: Right to Left (Single Line Continuous Ticker)
         scrollPosRef.current += pixelsPerSec * deltaTime;
         if (segWidth > 0 && scrollPosRef.current >= segWidth) {
           scrollPosRef.current = scrollPosRef.current % segWidth;
@@ -203,7 +201,7 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
       className={`relative w-full overflow-hidden transition-colors duration-300 rounded-2xl shadow-2xl border border-white/10 flex flex-col justify-center select-none ${
         isFullscreen
           ? 'fixed inset-0 z-50 rounded-none border-none h-screen'
-          : 'h-[360px] md:h-[400px]'
+          : 'h-[250px] sm:h-[320px] md:h-[390px]'
       }`}
       style={{
         backgroundColor: settings.backgroundColor,
@@ -211,13 +209,13 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
     >
       {/* Edge Vignette / Soft Fades for Left and Right Screen Edges */}
       <div
-        className="pointer-events-none absolute inset-y-0 left-0 w-24 md:w-36 z-20"
+        className="pointer-events-none absolute inset-y-0 left-0 w-12 sm:w-24 md:w-36 z-20"
         style={{
           background: `linear-gradient(to right, ${settings.backgroundColor} 15%, transparent 100%)`,
         }}
       />
       <div
-        className="pointer-events-none absolute inset-y-0 right-0 w-24 md:w-36 z-20"
+        className="pointer-events-none absolute inset-y-0 right-0 w-12 sm:w-24 md:w-36 z-20"
         style={{
           background: `linear-gradient(to left, ${settings.backgroundColor} 15%, transparent 100%)`,
         }}
@@ -225,7 +223,7 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
 
       {/* Focus Center Marker (Vertical Reading Cue for Single Line Ticker) */}
       {settings.showCenterMarker && (
-        <div className="pointer-events-none absolute inset-y-0 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center justify-between py-6">
+        <div className="pointer-events-none absolute inset-y-0 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center justify-between py-4 sm:py-6">
           <div
             className="w-1.5 h-1.5 rounded-full animate-ping"
             style={{ backgroundColor: settings.textColor }}
@@ -244,15 +242,15 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
       )}
 
       {/* Single-Line Marquee Track */}
-      <div className="relative w-full overflow-hidden py-4 flex items-center">
+      <div className="relative w-full overflow-hidden py-3 sm:py-4 flex items-center">
         {isEditing ? (
-          <div className="w-full max-w-4xl mx-auto px-6 z-30">
+          <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 z-30">
             <input
               type="text"
               value={editableDraft}
               onChange={(e) => setEditableDraft(e.target.value)}
               placeholder="Edit single line response..."
-              className="w-full bg-black/60 text-inherit border-2 border-indigo-500 rounded-xl px-6 py-4 text-xl md:text-2xl font-bold focus:outline-none focus:ring-4 focus:ring-indigo-500/30"
+              className="w-full bg-black/60 text-inherit border-2 border-indigo-500 rounded-xl px-4 py-3 sm:px-6 sm:py-4 text-base sm:text-xl md:text-2xl font-bold focus:outline-none focus:ring-4 focus:ring-indigo-500/30"
               style={{
                 color: settings.textColor,
                 fontFamily: settings.fontFamily,
@@ -265,7 +263,7 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
             className="flex whitespace-nowrap will-change-transform items-center"
             style={{
               fontFamily: settings.fontFamily,
-              fontSize: `${settings.fontSize}px`,
+              fontSize: `clamp(20px, ${settings.fontSize}px, 14vw)`,
               lineHeight: settings.lineHeight,
               color: settings.textColor,
               letterSpacing: `${settings.letterSpacing}px`,
@@ -277,19 +275,19 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
             }}
           >
             {/* Primary Segment */}
-            <span ref={segment1Ref} className="inline-flex items-center gap-12 pr-12">
+            <span ref={segment1Ref} className="inline-flex items-center gap-8 sm:gap-12 pr-8 sm:pr-12">
               <span>{singleLineText}</span>
               <span className="opacity-30">✦ ✦ ✦</span>
             </span>
 
             {/* Continuous Seamless Loop Segment 2 */}
-            <span className="inline-flex items-center gap-12 pr-12" aria-hidden="true">
+            <span className="inline-flex items-center gap-8 sm:gap-12 pr-8 sm:pr-12" aria-hidden="true">
               <span>{singleLineText}</span>
               <span className="opacity-30">✦ ✦ ✦</span>
             </span>
 
             {/* Continuous Seamless Loop Segment 3 */}
-            <span className="inline-flex items-center gap-12 pr-12" aria-hidden="true">
+            <span className="inline-flex items-center gap-8 sm:gap-12 pr-8 sm:pr-12" aria-hidden="true">
               <span>{singleLineText}</span>
               <span className="opacity-30">✦ ✦ ✦</span>
             </span>
@@ -298,51 +296,51 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
       </div>
 
       {/* Top Banner Details & Streaming Indicator */}
-      <div className="absolute top-4 inset-x-6 z-20 flex items-center justify-between pointer-events-none">
-        <div className="flex items-center gap-2">
+      <div className="absolute top-3 inset-x-3 sm:top-4 sm:inset-x-6 z-20 flex items-center justify-between pointer-events-none gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-hidden">
           <span
-            className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-black/50 backdrop-blur border border-white/15 flex items-center gap-1.5"
+            className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-mono font-bold tracking-wider uppercase bg-black/60 backdrop-blur border border-white/15 flex items-center gap-1.5 shrink-0"
             style={{ color: settings.textColor }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            SINGLE-LINE MARQUEE • RIGHT TO LEFT
+            <span className="hidden xs:inline">MARQUEE •</span> R-TO-L
           </span>
           {isStreaming && (
-            <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 backdrop-blur animate-pulse">
-              STREAMING LIVE...
+            <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-mono font-bold tracking-wider uppercase bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 backdrop-blur animate-pulse truncate">
+              STREAMING...
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {settings.mirrorMode && (
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+            <span className="px-1.5 sm:px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
               MIRROR
             </span>
           )}
           <span
-            className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-black/50 backdrop-blur border border-white/15"
+            className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-mono font-bold tracking-wider uppercase bg-black/60 backdrop-blur border border-white/15"
             style={{ color: settings.textColor }}
           >
-            {settings.fontSize}PX • {settings.lineHeight.toFixed(1)}LH • {settings.animationSpeed.toFixed(1)}X SPD
+            {settings.fontSize}PX • {settings.animationSpeed.toFixed(1)}X
           </span>
         </div>
       </div>
 
-      {/* Floating HUD Controls Overlay */}
+      {/* Responsive Floating HUD Controls Overlay */}
       <div
-        className={`absolute bottom-6 inset-x-0 z-30 flex justify-center px-4 transition-all duration-300 pointer-events-none ${
+        className={`absolute bottom-3 sm:bottom-6 inset-x-0 z-30 flex justify-center px-2 sm:px-4 transition-all duration-300 pointer-events-none ${
           showControls ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}
       >
-        <div className="pointer-events-auto flex items-center gap-2 md:gap-3 bg-slate-900/90 backdrop-blur-xl border border-white/15 px-4 py-2.5 rounded-2xl shadow-2xl text-slate-100">
+        <div className="pointer-events-auto max-w-[calc(100vw-20px)] sm:max-w-none overflow-x-auto no-scrollbar flex items-center gap-1.5 sm:gap-2 md:gap-3 bg-slate-900/95 backdrop-blur-xl border border-white/15 px-2.5 sm:px-4 py-2 sm:py-2.5 rounded-2xl shadow-2xl text-slate-100">
           {/* Rewind Button */}
           <button
             onClick={handleResetScroll}
             title="Rewind to start (R)"
-            className="p-2.5 rounded-xl hover:bg-white/10 active:scale-95 transition text-slate-300 hover:text-white"
+            className="p-2 sm:p-2.5 rounded-xl hover:bg-white/10 active:scale-95 transition text-slate-300 hover:text-white shrink-0"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
 
           {/* Slower Speed */}
@@ -354,16 +352,16 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
               }))
             }
             title="Slower speed (Down Arrow)"
-            className="p-2 rounded-xl hover:bg-white/10 active:scale-95 transition text-slate-300 hover:text-white"
+            className="p-1.5 sm:p-2 rounded-xl hover:bg-white/10 active:scale-95 transition text-slate-300 hover:text-white shrink-0"
           >
-            <Rewind className="w-4 h-4" />
+            <Rewind className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
 
           {/* Primary Play / Pause Button */}
           <button
             onClick={() => setIsPlaying((prev) => !prev)}
             title={isPlaying ? 'Pause scroll (Space)' : 'Play scroll (Space)'}
-            className={`flex items-center gap-2 px-5 py-2 rounded-xl font-semibold shadow-lg transition-all active:scale-95 ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2 rounded-xl font-semibold shadow-lg transition-all active:scale-95 shrink-0 ${
               isPlaying
                 ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/20'
                 : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/20'
@@ -371,13 +369,13 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
           >
             {isPlaying ? (
               <>
-                <Pause className="w-4 h-4 fill-current" />
-                <span className="text-xs uppercase tracking-wider">Pause</span>
+                <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
+                <span className="text-[11px] sm:text-xs uppercase tracking-wider font-bold">Pause</span>
               </>
             ) : (
               <>
-                <Play className="w-4 h-4 fill-current" />
-                <span className="text-xs uppercase tracking-wider">Scroll</span>
+                <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
+                <span className="text-[11px] sm:text-xs uppercase tracking-wider font-bold">Scroll</span>
               </>
             )}
           </button>
@@ -391,20 +389,19 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
               }))
             }
             title="Faster speed (Up Arrow)"
-            className="p-2 rounded-xl hover:bg-white/10 active:scale-95 transition text-slate-300 hover:text-white"
+            className="p-1.5 sm:p-2 rounded-xl hover:bg-white/10 active:scale-95 transition text-slate-300 hover:text-white shrink-0"
           >
-            <FastForward className="w-4 h-4" />
+            <FastForward className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
 
           {/* Current Speed Badge */}
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 font-mono text-xs text-slate-300">
-            <span className="text-slate-400">SPD:</span>
+          <div className="flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-white/5 border border-white/10 font-mono text-[10px] sm:text-xs text-slate-300 shrink-0">
             <span className="font-bold text-white">{settings.animationSpeed.toFixed(1)}x</span>
           </div>
 
-          <div className="h-5 w-[1px] bg-white/10 mx-1 hidden sm:block" />
+          <div className="h-4 sm:h-5 w-[1px] bg-white/10 mx-0.5 sm:mx-1 shrink-0" />
 
-          {/* Direction Toggle (Right-to-Left vs Left-to-Right) */}
+          {/* Direction Toggle */}
           <button
             onClick={() =>
               onUpdateSettings((prev) => ({
@@ -420,9 +417,9 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
                 ? 'Right to Left'
                 : 'Left to Right'
             }`}
-            className="p-2.5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-cyan-300 transition"
+            className="p-2 sm:p-2.5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-cyan-300 transition shrink-0"
           >
-            <ArrowLeftRight className="w-4 h-4" />
+            <ArrowLeftRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
 
           {/* Center Marker Toggle */}
@@ -434,13 +431,13 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
               }))
             }
             title="Toggle Center Focus Marker"
-            className={`p-2.5 rounded-xl transition ${
+            className={`p-2 sm:p-2.5 rounded-xl transition shrink-0 ${
               settings.showCenterMarker
                 ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'
                 : 'hover:bg-white/10 text-slate-400'
             }`}
           >
-            <Crosshair className="w-4 h-4" />
+            <Crosshair className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
 
           {/* Edit Text Toggle */}
@@ -457,35 +454,35 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
               }
             }}
             title={isEditing ? 'Save and Resume' : 'Edit Marquee Text'}
-            className={`p-2.5 rounded-xl transition ${
+            className={`p-2 sm:p-2.5 rounded-xl transition shrink-0 ${
               isEditing
                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
                 : 'hover:bg-white/10 text-slate-400'
             }`}
           >
-            {isEditing ? <Check className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
+            {isEditing ? <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Edit3 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
           </button>
 
           {/* Voice Speech (TTS) */}
           <button
             onClick={toggleTts}
             title={isTtsActive ? 'Stop Voice Speech' : 'Listen via Voice Speech (TTS)'}
-            className={`p-2.5 rounded-xl transition ${
+            className={`p-2 sm:p-2.5 rounded-xl transition shrink-0 ${
               isTtsActive
                 ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30 animate-pulse'
                 : 'hover:bg-white/10 text-slate-400'
             }`}
           >
-            {isTtsActive ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            {isTtsActive ? <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
           </button>
 
           {/* Fullscreen Toggle */}
           <button
             onClick={toggleFullscreen}
             title="Toggle Widescreen Fullscreen (F)"
-            className="p-2.5 rounded-xl hover:bg-white/10 active:scale-95 transition text-slate-300 hover:text-white"
+            className="p-2 sm:p-2.5 rounded-xl hover:bg-white/10 active:scale-95 transition text-slate-300 hover:text-white shrink-0"
           >
-            {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+            {isFullscreen ? <Minimize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Maximize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
           </button>
         </div>
       </div>
