@@ -201,7 +201,7 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
       className={`relative w-full overflow-hidden transition-colors duration-300 rounded-2xl shadow-2xl border border-white/10 flex flex-col justify-center select-none ${
         isFullscreen
           ? 'fixed inset-0 z-50 rounded-none border-none h-screen'
-          : 'h-[250px] sm:h-[320px] md:h-[390px]'
+          : 'h-[150px] sm:h-[320px] md:h-[390px]'
       }`}
       style={{
         backgroundColor: settings.backgroundColor,
