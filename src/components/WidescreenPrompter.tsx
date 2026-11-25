@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react';
 import {
   Play,
   Pause,
@@ -48,20 +48,64 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
     .replace(/\r?\n+/g, '    ✦    ')
     .trim();
 
+  // Helper to determine container width with safe fallback
+  const getContainerWidth = useCallback(() => {
+    if (containerRef.current && containerRef.current.offsetWidth > 0) {
+      return containerRef.current.offsetWidth;
+    }
+    if (typeof window !== 'undefined') {
+      return window.innerWidth;
+    }
+    return 1200;
+  }, []);
+
   // Scroll offset with sub-pixel float precision
-  const scrollPosRef = useRef<number>(0);
+  // Initialize to -initialWidth so it starts at the right-most edge: translateX(+initialWidth)
+  const initialWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
+  const scrollPosRef = useRef<number>(-initialWidth);
   const lastTimeRef = useRef<number | null>(null);
   const animFrameId = useRef<number | null>(null);
   const hideControlsTimerRef = useRef<any>(null);
+  const lastProcessedTextRef = useRef<string>(text);
 
-  // Reset scroll to start
+  // Reset scroll to start from the right-most edge
   const handleResetScroll = useCallback(() => {
-    scrollPosRef.current = 0;
+    const w = getContainerWidth();
+    if (settings.scrollDirection === 'left-to-right') {
+      const segWidth = segment1Ref.current ? segment1Ref.current.offsetWidth : 0;
+      scrollPosRef.current = segWidth > 0 ? segWidth : w;
+    } else {
+      // Right-to-left: start with text at the far right border of container
+      scrollPosRef.current = -w;
+    }
     lastTimeRef.current = null;
     if (trackRef.current) {
-      trackRef.current.style.transform = 'translateX(0px)';
+      const mirrorPrefix = settings.mirrorMode ? 'scaleX(-1) ' : '';
+      trackRef.current.style.transform = `${mirrorPrefix}translateX(${-scrollPosRef.current}px)`;
     }
-  }, []);
+  }, [getContainerWidth, settings.scrollDirection, settings.mirrorMode]);
+
+  // Initial reset before browser paint to guarantee starting from right-most edge
+  useLayoutEffect(() => {
+    handleResetScroll();
+  }, [handleResetScroll]);
+
+  // When text changes: reset to right-most edge unless it's a streaming chunk continuation
+  useEffect(() => {
+    if (text !== lastProcessedTextRef.current) {
+      const prev = lastProcessedTextRef.current;
+      lastProcessedTextRef.current = text;
+
+      const isContinuationChunk =
+        isStreaming &&
+        Boolean(prev) &&
+        text.startsWith(prev);
+
+      if (!isContinuationChunk) {
+        handleResetScroll();
+      }
+    }
+  }, [text, isStreaming, handleResetScroll]);
 
   // Fullscreen toggle
   const toggleFullscreen = useCallback(() => {
@@ -143,20 +187,24 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
       lastTimeRef.current = now;
 
       const segWidth = segment1Ref.current ? segment1Ref.current.offsetWidth : 0;
+      const containerW = getContainerWidth();
 
       if (settings.scrollDirection === 'left-to-right') {
         scrollPosRef.current -= pixelsPerSec * deltaTime;
-        if (segWidth > 0 && scrollPosRef.current <= 0) {
+        if (segWidth > 0 && scrollPosRef.current <= -containerW) {
           scrollPosRef.current = segWidth;
         }
       } else {
+        // Right-to-left: increments scroll offset, shifting track from right to left
         scrollPosRef.current += pixelsPerSec * deltaTime;
+        // Seamless loop once primary segment has fully scrolled past
         if (segWidth > 0 && scrollPosRef.current >= segWidth) {
           scrollPosRef.current = scrollPosRef.current % segWidth;
         }
       }
 
-      track.style.transform = `translateX(-${scrollPosRef.current}px)`;
+      const mirrorPrefix = settings.mirrorMode ? 'scaleX(-1) ' : '';
+      track.style.transform = `${mirrorPrefix}translateX(${-scrollPosRef.current}px)`;
       animFrameId.current = requestAnimationFrame(tick);
     };
 
@@ -165,7 +213,14 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
     return () => {
       if (animFrameId.current) cancelAnimationFrame(animFrameId.current);
     };
-  }, [isPlaying, settings.animationSpeed, settings.scrollDirection, singleLineText]);
+  }, [
+    isPlaying,
+    settings.animationSpeed,
+    settings.scrollDirection,
+    settings.mirrorMode,
+    getContainerWidth,
+    singleLineText,
+  ]);
 
   // Fullscreen change listener
   useEffect(() => {
@@ -268,29 +323,22 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
               color: settings.textColor,
               letterSpacing: `${settings.letterSpacing}px`,
               fontWeight: settings.fontWeight || '700',
-              transform: settings.mirrorMode ? 'scaleX(-1)' : 'none',
               textShadow: settings.enableGlow
                 ? `0 0 20px ${settings.textColor}80`
                 : 'none',
             }}
           >
-            {/* Primary Segment */}
-            <span ref={segment1Ref} className="inline-flex items-center gap-8 sm:gap-12 pr-8 sm:pr-12">
-              <span>{singleLineText}</span>
-              <span className="opacity-30">✦ ✦ ✦</span>
-            </span>
-
-            {/* Continuous Seamless Loop Segment 2 */}
-            <span className="inline-flex items-center gap-8 sm:gap-12 pr-8 sm:pr-12" aria-hidden="true">
-              <span>{singleLineText}</span>
-              <span className="opacity-30">✦ ✦ ✦</span>
-            </span>
-
-            {/* Continuous Seamless Loop Segment 3 */}
-            <span className="inline-flex items-center gap-8 sm:gap-12 pr-8 sm:pr-12" aria-hidden="true">
-              <span>{singleLineText}</span>
-              <span className="opacity-30">✦ ✦ ✦</span>
-            </span>
+            {[0, 1, 2, 3, 4, 5].map((idx) => (
+              <span
+                key={idx}
+                ref={idx === 0 ? segment1Ref : undefined}
+                className="inline-flex items-center gap-8 sm:gap-12 pr-8 sm:pr-12"
+                aria-hidden={idx > 0 ? true : undefined}
+              >
+                <span>{singleLineText}</span>
+                <span className="opacity-30">✦ ✦ ✦</span>
+              </span>
+            ))}
           </div>
         )}
       </div>
@@ -448,6 +496,7 @@ export const WidescreenPrompter: React.FC<WidescreenPrompterProps> = ({
                   onEditText(editableDraft);
                 }
                 setIsEditing(false);
+                handleResetScroll();
               } else {
                 setEditableDraft(singleLineText);
                 setIsEditing(true);
